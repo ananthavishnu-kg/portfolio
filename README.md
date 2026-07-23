@@ -1,4 +1,6 @@
-# Portfolio
+<div align="center">
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0,07090D,12161D,5FE3C0&height=140&section=header&text=Portfolio&fontSize=42&fontColor=fff&animation=fadeIn&fontAlignY=40" width="100%"/>
+</div>
 
 My personal portfolio site — a single-page site with a terminal / data-network theme, built to match my work as a Data & AI Analyst rather than a generic template.
 
