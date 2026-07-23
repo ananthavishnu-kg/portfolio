@@ -1,10 +1,24 @@
 # Portfolio
 
-My personal portfolio site — a single-page site with a terminal/data theme, built to match my work as a Data & AI Analyst.
+My personal portfolio site — a single-page site with a terminal / data-network theme, built to match my work as a Data & AI Analyst rather than a generic template.
 
-**Live:** [ananthavishnu-kg.github.io/portfolio](https://ananthavishnu-kg.github.io/portfolio/)
+**🌐 Live:** [ananthavishnu-kg.github.io/portfolio](https://ananthavishnu-kg.github.io/portfolio/)
 
-Built with plain HTML, CSS, and JavaScript — no framework, no build step. Canvas-based animated background, 3D cursor-tilt on cards, and a typed SQL-query hero.
+<!-- Optional: drop a screenshot of the live site here, e.g.
+![Portfolio preview](assets/preview.png)
+-->
+
+## What's in it
+
+- Hero that types out and "runs" a SQL query, returning my profile as a result row
+- Animated particle-network background (canvas)
+- 3D tilt on the terminal and project cards, tracking your cursor
+- Illustrated avatar with a typed "Hi, I'm Vishnu 👋" speech bubble
+- Work experience shown as a commit-log style timeline
+
+## Stack
+
+HTML, CSS, and vanilla JavaScript — no framework, no build step. Fonts via Google Fonts (JetBrains Mono + Inter).
 
 ## Run locally
 
