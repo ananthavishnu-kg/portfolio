@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anantha Vishnu — Data & AI Analyst</title>
+<meta name="description" content="Anantha Vishnu — Data & AI Analyst. Python, SQL, Power BI, NLP, Machine Learning.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07090D;
+    --panel:rgba(22,27,36,0.55);
+    --panel-solid:#12161D;
+    --panel-2:rgba(28,34,45,0.55);
+    --border:#232B39;
+    --border-glass:rgba(255,255,255,0.08);
+    --text-primary:#EDEFF4;
+    --text-muted:#8891A3;
+    --text-dim:#5B6478;
+    --accent:#5FE3C0;
+    --accent-glow:rgba(95,227,192,0.35);
+    --accent-dim:#2E5C50;
+    --warn:#E8A33D;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', -apple-system, sans-serif;
+    --radius: 14px;
+    --maxw: 1020px;
+    --persp: 1400px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text-primary);
+    font-family:var(--sans);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  #bg-canvas{
+    position:fixed; inset:0; z-index:0; display:block;
+    pointer-events:none;
+  }
+  body::before{
+    content:'';
+    position:fixed; inset:0;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(95,227,192,0.10), transparent 55%),
+      radial-gradient(ellipse 70% 50% at 100% 100%, rgba(95,227,192,0.05), transparent 60%);
+    pointer-events:none;
+    z-index:1;
+  }
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--accent-dim); color:var(--accent);}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px;}
+
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px; position:relative; z-index:2;}
+  section{padding:110px 0;}
+  @media (max-width:640px){ section{padding:72px 0;} }
+
+  /* ---------- GLASS SURFACE ---------- */
+  .glass{
+    background:linear-gradient(155deg, rgba(30,37,49,0.65), rgba(15,19,26,0.55));
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    border:1px solid var(--border-glass);
+    border-radius:var(--radius);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.06) inset,
+      0 0 0 1px rgba(0,0,0,0.2),
+      0 30px 60px -24px rgba(0,0,0,0.7);
+  }
+  .tilt{
+    transition:transform .5s cubic-bezier(.2,.8,.2,1), box-shadow .5s ease;
+    transform-style:preserve-3d;
+    will-change:transform;
+  }
+  .tilt:hover{
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.08) inset,
+      0 0 0 1px rgba(0,0,0,0.2),
+      0 40px 80px -20px rgba(0,0,0,0.8),
+      0 0 40px -10px var(--accent-glow);
+  }
+
+  .hairline{border-top:1px solid var(--border);}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter:blur(16px) saturate(140%);
+    background:rgba(7,9,13,0.6);
+    border-bottom:1px solid var(--border-glass);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; padding:16px 24px;}
+  .nav-logo{font-family:var(--mono); font-weight:600; font-size:14px; color:var(--text-primary);}
+  .nav-logo span{color:var(--accent);}
+  .nav-links{display:flex; gap:28px; font-family:var(--mono); font-size:13px; color:var(--text-muted);}
+  .nav-links a:hover{color:var(--accent);}
+  @media (max-width:640px){ .nav-links{gap:16px; font-size:11px;} }
+
+  /* ---------- HERO ---------- */
+  .hero{padding:100px 0 60px;}
+  .hero-split{
+    display:grid; grid-template-columns:0.8fr 1.2fr; gap:52px; align-items:center;
+  }
+  @media (max-width:820px){ .hero-split{grid-template-columns:1fr; gap:40px;} }
+  .photo-col{display:flex; justify-content:center;}
+  .photo-frame{
+    position:relative; width:250px; height:312px;
+    animation:floatY 5s ease-in-out infinite;
+    transform-style:preserve-3d;
+  }
+  @media (max-width:640px){ .photo-frame{width:190px; height:238px;} }
+  .photo-ring-big{
+    position:absolute; inset:-8px; border-radius:24px;
+    background:conic-gradient(from 0deg, var(--accent), transparent 35%, transparent 65%, var(--accent));
+    animation:spin 8s linear infinite;
+    opacity:0.75;
+  }
+  .photo-frame-inner{
+    position:absolute; inset:5px; border-radius:20px; overflow:hidden;
+    border:1px solid var(--border-glass);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.75), 0 0 50px -10px var(--accent-glow);
+  }
+  .photo-frame-inner img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    transition:transform .6s ease;
+  }
+  .photo-frame:hover .photo-frame-inner img{
+    transform:scale(1.06);
+  }
+  .speech-bubble{
+    position:absolute; top:14px; right:-190px; width:180px;
+    background:linear-gradient(155deg, rgba(30,37,49,0.9), rgba(15,19,26,0.85));
+    backdrop-filter:blur(14px);
+    border:1px solid var(--border-glass);
+    border-radius:14px; border-bottom-left-radius:4px;
+    padding:12px 14px; font-family:var(--mono); font-size:12.5px; color:var(--text-primary);
+    box-shadow:0 20px 40px -16px rgba(0,0,0,0.7);
+    opacity:0; transform:translateY(6px) scale(0.96);
+    transition:opacity .4s ease, transform .4s ease;
+    z-index:6;
+  }
+  .speech-bubble.show{opacity:1; transform:translateY(0) scale(1);}
+  @media (max-width:980px){
+    .speech-bubble{position:static; width:auto; margin-top:16px; text-align:center;}
+  }
+  @keyframes floatY{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-12px);}
+  }
+  @keyframes spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+  }
+  .hero-stage{perspective:var(--persp);}
+  .terminal{
+    overflow:hidden;
+    transform:perspective(1400px) rotateX(4deg) rotateY(-4deg);
+  }
+  .terminal-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:12px 18px;
+    background:rgba(10,13,18,0.4);
+    border-bottom:1px solid var(--border-glass);
+  }
+  .dot{width:10px; height:10px; border-radius:50%; background:var(--border);}
+  .terminal-title{
+    margin-left:8px; font-family:var(--mono); font-size:12px; color:var(--text-dim);
+  }
+  .terminal-body{padding:28px 24px 30px; font-family:var(--mono); font-size:14px;}
+  @media (max-width:640px){ .terminal-body{padding:20px 16px 24px; font-size:12.5px;} }
+
+  .prompt{color:var(--text-dim);}
+  .query-line{color:var(--text-primary); white-space:pre-wrap; word-break:break-word;}
+  .kw{color:var(--accent);}
+  .cursor{
+    display:inline-block; width:8px; height:16px; background:var(--accent);
+    vertical-align:middle; margin-left:2px;
+    animation:blink 1s step-end infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
+
+  .result-table{width:100%; margin-top:20px; border-collapse:collapse; font-size:13px; opacity:0; transform:translateY(6px); transition:opacity .5s ease, transform .5s ease;}
+  .result-table.show{opacity:1; transform:none;}
+  .result-table th{
+    text-align:left; padding:8px 14px; color:var(--text-dim);
+    border-bottom:1px solid var(--border); font-weight:500; white-space:nowrap;
+  }
+  .result-table td{
+    padding:10px 14px; border-bottom:1px solid var(--border); color:var(--text-primary);
+  }
+  .result-table tr:last-child td{border-bottom:none;}
+  .tag{
+    display:inline-block; background:var(--accent-dim); color:var(--accent);
+    padding:2px 8px; border-radius:4px; font-size:11px; margin:2px 4px 2px 0;
+  }
+
+  .hero-sub{margin-top:28px; display:flex; flex-wrap:wrap; gap:12px;}
+  .btn{
+    font-family:var(--mono); font-size:13px; padding:11px 20px;
+    border-radius:10px; border:1px solid var(--border-glass);
+    transition:border-color .25s, color .25s, background .25s, box-shadow .25s, transform .25s;
+    display:inline-block;
+  }
+  .btn-primary{background:var(--accent); color:#07090D; border-color:var(--accent); font-weight:600;}
+  .btn-primary:hover{background:#7DEBCC; box-shadow:0 8px 30px -8px var(--accent-glow); transform:translateY(-2px);}
+  .btn-ghost{color:var(--text-muted); background:rgba(22,27,36,0.4); backdrop-filter:blur(8px);}
+  .btn-ghost:hover{color:var(--accent); border-color:var(--accent-dim); transform:translateY(-2px);}
+
+  /* ---------- SECTION LABEL ---------- */
+  .section-label{
+    font-family:var(--mono); font-size:12px; color:var(--accent);
+    display:flex; align-items:center; gap:10px; margin-bottom:8px;
+  }
+  .section-label::before{content:'//'; color:var(--text-dim);}
+  h2.section-title{
+    font-family:var(--sans); font-weight:800; font-size:28px; margin-bottom:36px; letter-spacing:-0.01em;
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{display:grid; grid-template-columns:1.3fr 1fr; gap:48px;}
+  @media (max-width:760px){ .about-grid{grid-template-columns:1fr;} }
+  .about-text p{color:var(--text-muted); margin-bottom:16px; font-size:15.5px;}
+  .about-text strong{color:var(--text-primary); font-weight:600;}
+  .schema{
+    padding:22px 24px; font-family:var(--mono); font-size:13px; height:fit-content;
+  }
+  .schema-row{display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--border); gap:12px;}
+  .schema-row:last-child{border-bottom:none;}
+  .schema-key{color:var(--text-dim);}
+  .schema-val{color:var(--text-primary); text-align:right;}
+
+  /* ---------- PROJECTS ---------- */
+  .tier-note{font-family:var(--mono); font-size:12px; color:var(--text-dim); margin:-16px 0 32px;}
+  .proj-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:22px; perspective:var(--persp);}
+  @media (max-width:760px){ .proj-grid{grid-template-columns:1fr;} }
+  .card{
+    padding:26px; display:flex; flex-direction:column;
+  }
+  .card-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
+  .card-title{font-weight:700; font-size:16.5px;}
+  .live-badge{
+    font-family:var(--mono); font-size:10px; color:var(--accent);
+    border:1px solid var(--accent-dim); padding:3px 8px; border-radius:20px;
+    display:flex; align-items:center; gap:5px; white-space:nowrap;
+  }
+  .live-dot{width:6px; height:6px; border-radius:50%; background:var(--accent); animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+  .card-desc{color:var(--text-muted); font-size:13.5px; margin-bottom:16px; flex-grow:1;}
+  .card-stack{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px;}
+  .stack-chip{
+    font-family:var(--mono); font-size:10.5px; color:var(--text-dim);
+    border:1px solid var(--border); padding:3px 8px; border-radius:4px;
+  }
+  .card-links{display:flex; gap:10px; font-family:var(--mono); font-size:12px;}
+  .card-links a{color:var(--text-muted); display:flex; align-items:center; gap:5px;}
+  .card-links a:hover{color:var(--accent);}
+
+  .additional-note{
+    font-family:var(--mono); font-size:12px; color:var(--warn); margin:48px 0 20px;
+    padding:14px 18px; border:1px solid rgba(232,163,61,0.25); border-radius:10px; background:rgba(232,163,61,0.06);
+    backdrop-filter:blur(10px);
+  }
+  .add-list{display:flex; flex-direction:column; gap:10px;}
+  .add-row{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;
+    padding:16px 20px; border-radius:10px;
+    background:rgba(22,27,36,0.4); border:1px solid var(--border-glass); backdrop-filter:blur(10px);
+    transition:transform .3s ease, background .3s ease;
+  }
+  .add-row:hover{transform:translateX(4px); background:rgba(22,27,36,0.6);}
+  .add-row-title{font-size:14px; font-weight:600;}
+  .add-row-desc{color:var(--text-dim); font-size:12.5px; font-family:var(--mono);}
+
+  /* ---------- EXPERIENCE (commit log) ---------- */
+  .log{border-left:1px solid var(--border); margin-left:6px;}
+  .commit{position:relative; padding:0 0 40px 28px;}
+  .commit:last-child{padding-bottom:0;}
+  .commit::before{
+    content:''; position:absolute; left:-5px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--bg); border:2px solid var(--accent);
+  }
+  .commit-hash{font-family:var(--mono); font-size:11px; color:var(--text-dim);}
+  .commit-title{font-weight:700; font-size:16px; margin:4px 0 2px;}
+  .commit-meta{font-family:var(--mono); font-size:12px; color:var(--accent); margin-bottom:12px;}
+  .commit ul{list-style:none; display:flex; flex-direction:column; gap:8px;}
+  .commit li{color:var(--text-muted); font-size:14px; padding-left:16px; position:relative;}
+  .commit li::before{content:'+'; position:absolute; left:0; color:var(--accent-dim);}
+  .commit-stack{margin-top:14px; display:flex; flex-wrap:wrap; gap:6px;}
+
+  /* ---------- SKILLS ---------- */
+  .skill-group{margin-bottom:28px;}
+  .skill-group-name{font-family:var(--mono); font-size:12px; color:var(--text-dim); margin-bottom:10px;}
+  .skill-tags{display:flex; flex-wrap:wrap; gap:8px;}
+  .skill-tag{
+    font-family:var(--mono); font-size:12.5px; padding:8px 14px;
+    border:1px solid var(--border-glass); border-radius:8px; color:var(--text-muted);
+    background:rgba(22,27,36,0.5); backdrop-filter:blur(8px);
+    transition:transform .25s ease, border-color .25s ease;
+  }
+  .skill-tag:hover{transform:translateY(-3px); border-color:var(--accent-dim);}
+  .skill-tag b{color:var(--text-primary); font-weight:500;}
+  .skill-tag .type{color:var(--accent);}
+
+  /* ---------- CERTS ---------- */
+  .cert-list{display:flex; flex-direction:column; gap:0;}
+  .cert-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:16px 0; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:6px;
+  }
+  .cert-row:first-child{border-top:1px solid var(--border);}
+  .cert-name{font-weight:600; font-size:14.5px;}
+  .cert-issuer{font-family:var(--mono); font-size:12px; color:var(--text-dim);}
+  .cert-footnote{font-family:var(--mono); font-size:12px; color:var(--text-dim); margin-top:16px;}
+
+  /* ---------- CONTACT ---------- */
+  .contact{text-align:center;}
+  .contact h2{font-size:32px; font-weight:800; margin-bottom:14px; letter-spacing:-0.01em;}
+  .contact p{color:var(--text-muted); margin-bottom:32px; font-size:15.5px;}
+  .contact-links{display:flex; justify-content:center; gap:14px; flex-wrap:wrap;}
+
+  footer{
+    padding:28px 0; text-align:center; font-family:var(--mono); font-size:12px; color:var(--text-dim);
+    border-top:1px solid var(--border);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<nav>
+  <div class="wrap">
+    <div class="nav-logo">anantha<span>@</span>portfolio</div>
+    <div class="nav-links">
+      <a href="#about">about</a>
+      <a href="#projects">projects</a>
+      <a href="#experience">experience</a>
+      <a href="#skills">skills</a>
+      <a href="#contact">contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-split">
+      <div class="photo-col">
+        <div class="photo-frame tilt">
+          <div class="photo-ring-big"></div>
+          <div class="photo-frame-inner">
+            <img src="assets/avatar.jpg" alt="Anantha Vishnu">
+          </div>
+          <div class="speech-bubble" id="speechBubble">
+            <span id="speechText"></span><span class="cursor" id="speechCursor"></span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-stage">
+        <div class="terminal glass tilt">
+          <div class="terminal-bar">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="terminal-title">profile.sql</span>
+          </div>
+          <div class="terminal-body">
+            <div><span class="prompt">$ </span><span class="query-line" id="typedQuery"></span><span class="cursor" id="cursor"></span></div>
+            <table class="result-table" id="resultTable">
+              <thead>
+                <tr><th>name</th><th>role</th><th>location</th><th>stack</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Anantha Vishnu</td>
+                  <td>Data &amp; AI Analyst</td>
+                  <td>Calicut, Kerala, IN</td>
+                  <td>
+                    <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Power BI</span><span class="tag">NLP</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="hero-sub">
+          <a class="btn btn-primary" href="#projects">View Projects</a>
+          <a class="btn btn-ghost" href="https://github.com/ananthavishnu-kg" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/anantha-vishnu-a0880321b/" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a class="btn btn-ghost" href="mailto:ananthuuofficial@gmail.com">Email</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="about" class="hairline">
+  <div class="wrap">
+    <div class="section-label">about</div>
+    <h2 class="section-title">Who's running the query</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I'm a <strong>Data &amp; AI Analyst</strong> with hands-on experience across Python, SQL, and end-to-end data analytics — from raw data ingestion to executive-level Power BI dashboards. My engineering background in <strong>Computer Science with Artificial Intelligence</strong> lets me bridge data infrastructure with intelligent automation.</p>
+        <p>At <strong>Softloom IT Solutions</strong>, I built production analytics pipelines, processed 50,000+ records, and cut manual reporting cycles by 40% through dashboard automation. My work spans exploratory data analysis, NLP-based document processing, AI agent development, and full-stack data applications.</p>
+        <p>Currently pursuing an <strong>MBA in Business Analytics</strong> at Amity University to pair strategic thinking with technical depth.</p>
+      </div>
+      <div class="schema glass">
+        <div class="schema-row"><span class="schema-key">education</span><span class="schema-val">BTech CSE (AI), Jain University</span></div>
+        <div class="schema-row"><span class="schema-key">cgpa</span><span class="schema-val">8.00 / 10</span></div>
+        <div class="schema-row"><span class="schema-key">currently</span><span class="schema-val">MBA — Business Analytics</span></div>
+        <div class="schema-row"><span class="schema-key">location</span><span class="schema-val">Calicut, Kerala, India</span></div>
+        <div class="schema-row"><span class="schema-key">open_to</span><span class="schema-val">Remote / Full-time / Contract</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="hairline">
+  <div class="wrap">
+    <div class="section-label">projects</div>
+    <h2 class="section-title">Verified &amp; live</h2>
+    <div class="tier-note">Every project below has a public repository and a working live demo — click through and try them.</div>
+
+    <div class="proj-grid">
+
+      <div class="card glass tilt">
+        <div class="card-top">
+          <span class="card-title">DataLens AI</span>
+          <span class="live-badge"><span class="live-dot"></span>live</span>
+        </div>
+        <div class="card-desc">AI-powered data analysis workspace — upload a dataset, get automated profiling, a 0–100 health score, interactive dashboards, and a Groq-powered assistant that answers questions using only a compressed statistical context (never raw data).</div>
+        <div class="card-stack">
+          <span class="stack-chip">Streamlit</span><span class="stack-chip">Pandas</span><span class="stack-chip">SciPy</span><span class="stack-chip">Plotly</span><span class="stack-chip">Groq · Llama 3.3 70B</span>
+        </div>
+        <div class="card-links">
+          <a href="https://github.com/ananthavishnu-kg/DataLens_AI" target="_blank" rel="noopener">Code ↗</a>
+          <a href="https://datalens-ai-xx.streamlit.app/" target="_blank" rel="noopener">Live demo ↗</a>
+        </div>
+      </div>
+
+      <div class="card glass tilt">
+        <div class="card-top">
+          <span class="card-title">Synapse ERP</span>
+          <span class="live-badge"><span class="live-dot"></span>live</span>
+        </div>
+        <div class="card-desc">Conversational ERP assistant — manage vendors and purchase orders in plain English. A LangChain agent reasons through multi-step requests and always asks for explicit confirmation before executing any write action.</div>
+        <div class="card-stack">
+          <span class="stack-chip">FastAPI</span><span class="stack-chip">LangChain</span><span class="stack-chip">LangGraph</span><span class="stack-chip">Groq · Llama 3.3 70B</span>
+        </div>
+        <div class="card-links">
+          <a href="https://github.com/ananthavishnu-kg/Synapse-ERP-AI-Agent" target="_blank" rel="noopener">Code ↗</a>
+          <a href="https://synapse-erp-ai-agent.onrender.com" target="_blank" rel="noopener">Live demo ↗</a>
+        </div>
+      </div>
+
+      <div class="card glass tilt">
+        <div class="card-top">
+          <span class="card-title">AI Career Intelligence</span>
+          <span class="live-badge"><span class="live-dot"></span>live</span>
+        </div>
+        <div class="card-desc">100% client-side career analytics — resume parsing, ATS scoring, skill-gap analysis, and salary prediction. A Random Forest model trained offline runs entirely in the browser; nothing leaves the client.</div>
+        <div class="card-stack">
+          <span class="stack-chip">HTML5</span><span class="stack-chip">CSS3</span><span class="stack-chip">JavaScript</span><span class="stack-chip">Random Forest (in-browser)</span>
+        </div>
+        <div class="card-links">
+          <a href="https://github.com/ananthavishnu-kg/AI-Career-Intelligence" target="_blank" rel="noopener">Code ↗</a>
+          <a href="https://ananthavishnu-kg.github.io/AI-Career-Intelligence/" target="_blank" rel="noopener">Live demo ↗</a>
+        </div>
+      </div>
+
+      <div class="card glass tilt">
+        <div class="card-top">
+          <span class="card-title">Koffinoor</span>
+          <span class="live-badge"><span class="live-dot"></span>live</span>
+        </div>
+        <div class="card-desc">Full-stack café ordering website — menu browsing, an online ordering flow, and a customer review/blog section, built on a Django backend with a responsive front end.</div>
+        <div class="card-stack">
+          <span class="stack-chip">Django</span><span class="stack-chip">SQLite</span><span class="stack-chip">HTML/CSS/JS</span>
+        </div>
+        <div class="card-links">
+          <a href="https://github.com/ananthavishnu-kg/Koffinoor" target="_blank" rel="noopener">Code ↗</a>
+          <a href="https://root11.pythonanywhere.com/" target="_blank" rel="noopener">Live demo ↗</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="additional-note">// additional projects below — repositories pending public release, details are self-reported</div>
+    <div class="add-list">
+      <div class="add-row">
+        <div>
+          <div class="add-row-title">AI-Based Medical Document Processing System</div>
+          <div class="add-row-desc">OCR + NLP + TTS pipeline for scanned medical records · Python, Tesseract, Tkinter</div>
+        </div>
+      </div>
+      <div class="add-row">
+        <div>
+          <div class="add-row-title">AI Assistive System for Visually &amp; Speech-Impaired Persons</div>
+          <div class="add-row-desc">Gesture + text interpretation with voice output · Python, OpenCV, Google TTS</div>
+        </div>
+      </div>
+      <div class="add-row">
+        <div>
+          <div class="add-row-title">Sales Forecasting &amp; Demand Analytics</div>
+          <div class="add-row-desc">Regression modeling on historical sales data · Scikit-learn, Pandas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience" class="hairline">
+  <div class="wrap">
+    <div class="section-label">experience</div>
+    <h2 class="section-title">Commit history</h2>
+    <div class="log">
+
+      <div class="commit">
+        <div class="commit-hash">2026-01 → present</div>
+        <div class="commit-title">Freelance Full Stack Developer</div>
+        <div class="commit-meta">Self-Employed · Remote, India</div>
+        <ul>
+          <li>Designed and built custom websites and web apps using HTML, CSS, JavaScript, React, Django, Flask, and WordPress</li>
+          <li>Implemented database integration, REST APIs, authentication, and performance optimization for client projects</li>
+        </ul>
+        <div class="commit-stack">
+          <span class="stack-chip">React</span><span class="stack-chip">Django</span><span class="stack-chip">Flask</span><span class="stack-chip">WordPress</span>
+        </div>
+      </div>
+
+      <div class="commit">
+        <div class="commit-hash">2024-10 → 2025-10</div>
+        <div class="commit-title">Data Analyst Intern</div>
+        <div class="commit-meta">Softloom IT Solutions · Kochi, Kerala</div>
+        <ul>
+          <li>Built 6+ interactive Power BI dashboards, cutting manual reporting effort by 40%</li>
+          <li>Cleaned and processed 50,000+ records with Python (Pandas, NumPy), improving reporting accuracy by 30%</li>
+          <li>Automated KPI reporting workflows, compressing prep time from 2 days to under 6 hours</li>
+        </ul>
+        <div class="commit-stack">
+          <span class="stack-chip">Python</span><span class="stack-chip">SQL</span><span class="stack-chip">Power BI</span><span class="stack-chip">Pandas</span>
+        </div>
+      </div>
+
+      <div class="commit">
+        <div class="commit-hash">2024-01 → 2024-07</div>
+        <div class="commit-title">AI / ML Engineer Intern</div>
+        <div class="commit-meta">Corizo · Bengaluru, India</div>
+        <ul>
+          <li>Built a cardiovascular disease prediction model using TensorFlow and Scikit-learn with MLflow experiment tracking</li>
+          <li>Trained computer vision models including YOLOv10 and SegFormer for detection and segmentation</li>
+        </ul>
+        <div class="commit-stack">
+          <span class="stack-chip">TensorFlow</span><span class="stack-chip">PyTorch</span><span class="stack-chip">MLflow</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="hairline">
+  <div class="wrap">
+    <div class="section-label">skills</div>
+    <h2 class="section-title">Schema</h2>
+
+    <div class="skill-group">
+      <div class="skill-group-name">data &amp; visualization</div>
+      <div class="skill-tags">
+        <span class="skill-tag"><span class="type">tbl</span> <b>Power BI</b></span>
+        <span class="skill-tag"><span class="type">tbl</span> <b>Pandas</b></span>
+        <span class="skill-tag"><span class="type">tbl</span> <b>NumPy</b></span>
+        <span class="skill-tag"><span class="type">tbl</span> <b>Plotly</b></span>
+        <span class="skill-tag"><span class="type">tbl</span> <b>SQL</b></span>
+        <span class="skill-tag"><span class="type">tbl</span> <b>Excel</b></span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <div class="skill-group-name">machine learning &amp; ai</div>
+      <div class="skill-tags">
+        <span class="skill-tag"><span class="type">fn</span> <b>Scikit-learn</b></span>
+        <span class="skill-tag"><span class="type">fn</span> <b>TensorFlow</b></span>
+        <span class="skill-tag"><span class="type">fn</span> <b>PyTorch</b></span>
+        <span class="skill-tag"><span class="type">fn</span> <b>OpenCV</b></span>
+        <span class="skill-tag"><span class="type">fn</span> <b>NLP</b></span>
+        <span class="skill-tag"><span class="type">fn</span> <b>LangChain</b></span>
+        <span class="skill-tag"><span class="type">fn</span> <b>Groq / Llama 3.3</b></span>
+      </div>
+    </div>
+
+    <div class="skill-group">
+      <div class="skill-group-name">backend &amp; languages</div>
+      <div class="skill-tags">
+        <span class="skill-tag"><span class="type">str</span> <b>Python</b></span>
+        <span class="skill-tag"><span class="type">str</span> <b>JavaScript</b></span>
+        <span class="skill-tag"><span class="type">str</span> <b>Django</b></span>
+        <span class="skill-tag"><span class="type">str</span> <b>Flask</b></span>
+        <span class="skill-tag"><span class="type">str</span> <b>FastAPI</b></span>
+        <span class="skill-tag"><span class="type">str</span> <b>SQLite</b></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="certifications" class="hairline">
+  <div class="wrap">
+    <div class="section-label">certifications</div>
+    <h2 class="section-title">Verified credentials</h2>
+    <div class="cert-list">
+      <div class="cert-row">
+        <span class="cert-name">Data Analytics Professional Certificate</span>
+        <span class="cert-issuer">Google</span>
+      </div>
+      <div class="cert-row">
+        <span class="cert-name">Power BI Data Analyst</span>
+        <span class="cert-issuer">Microsoft</span>
+      </div>
+      <div class="cert-row">
+        <span class="cert-name">AI in Finance &amp; Risk Management</span>
+        <span class="cert-issuer">Amity School of AI</span>
+      </div>
+      <div class="cert-row">
+        <span class="cert-name">Big Data Analytics &amp; Cloud Computing</span>
+        <span class="cert-issuer">Softloom IT Solutions</span>
+      </div>
+      <div class="cert-row">
+        <span class="cert-name">Data Analytics with AI</span>
+        <span class="cert-issuer">Keltron</span>
+      </div>
+      <div class="cert-row">
+        <span class="cert-name">Artificial Intelligence</span>
+        <span class="cert-issuer">Corizo</span>
+      </div>
+      <div class="cert-row">
+        <span class="cert-name">Financial Data Analytics &amp; Bank Competency</span>
+        <span class="cert-issuer">FinVeda</span>
+      </div>
+      <div class="cert-row">
+        <span class="cert-name">Python Programming</span>
+        <span class="cert-issuer">Udemy</span>
+      </div>
+      <div class="cert-row">
+        <span class="cert-name">Data Analyst</span>
+        <span class="cert-issuer">OneRoadmap</span>
+      </div>
+      <div class="cert-row">
+        <span class="cert-name">Advanced Excel</span>
+        <span class="cert-issuer">Amity University Online</span>
+      </div>
+    </div>
+    <div class="cert-footnote">// also completed: Basics of AI, Leadership &amp; Motivation, Strategic HR Management, Principles of Retailing, Professional &amp; Life Skills, Basic Mathematics — Amity University Online, MBA coursework</div>
+  </div>
+</section>
+
+<section id="contact" class="contact hairline">
+  <div class="wrap">
+    <div class="section-label" style="justify-content:center;">contact</div>
+    <h2>Let's talk data.</h2>
+    <p>Open to Data Analyst, AI/ML Engineer, and Business Intelligence roles — full-time, contract, or remote-first.</p>
+    <div class="contact-links">
+      <a class="btn btn-primary" href="mailto:ananthuuofficial@gmail.com">Email me</a>
+      <a class="btn btn-ghost" href="https://www.linkedin.com/in/anantha-vishnu-a0880321b/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <a class="btn btn-ghost" href="https://github.com/ananthavishnu-kg" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  built by Anantha Vishnu · rendered from real data, not placeholders
+</footer>
+
+<script>
+  // Typed hero query effect
+  const query = "SELECT * FROM analyst WHERE role = 'Data & AI Analyst' LIMIT 1;";
+  const el = document.getElementById('typedQuery');
+  const cursor = document.getElementById('cursor');
+  const table = document.getElementById('resultTable');
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function highlight(str){
+    return str.replace(/\b(SELECT|FROM|WHERE|LIMIT)\b/g, '<span class="kw">$1</span>');
+  }
+
+  if(prefersReduced){
+    el.innerHTML = highlight(query);
+    table.classList.add('show');
+  } else {
+    let i = 0;
+    function type(){
+      if(i <= query.length){
+        el.innerHTML = highlight(query.slice(0, i));
+        i++;
+        setTimeout(type, 28);
+      } else {
+        setTimeout(() => table.classList.add('show'), 300);
+      }
+    }
+    setTimeout(type, 400);
+  }
+
+  // ---------- Speech bubble greeting ----------
+  (function(){
+    const bubble = document.getElementById('speechBubble');
+    const text = document.getElementById('speechText');
+    const greeting = "Hi, I'm Vishnu 👋";
+    if(!bubble || !text) return;
+
+    if(prefersReduced){
+      text.textContent = greeting;
+      bubble.classList.add('show');
+      return;
+    }
+
+    setTimeout(() => {
+      bubble.classList.add('show');
+      let i = 0;
+      function typeGreeting(){
+        if(i <= greeting.length){
+          text.textContent = greeting.slice(0, i);
+          i++;
+          setTimeout(typeGreeting, 45);
+        }
+      }
+      typeGreeting();
+    }, 900);
+  })();
+
+  // ---------- 3D data-network background ----------
+  (function(){
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, nodes = [];
+    const NODE_COUNT = window.innerWidth < 700 ? 34 : 60;
+    const MAX_DIST = 150;
+    const ACCENT = '95,227,192';
+
+    function resize(){
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = document.documentElement.scrollHeight;
+    }
+
+    function makeNodes(){
+      nodes = [];
+      for(let i=0;i<NODE_COUNT;i++){
+        nodes.push({
+          x: Math.random()*w,
+          y: Math.random()* Math.min(h, window.innerHeight*1.4),
+          z: Math.random()*1 + 0.3,
+          vx: (Math.random()-0.5)*0.15,
+          vy: (Math.random()-0.5)*0.15
+        });
+      }
+    }
+
+    function step(){
+      ctx.clearRect(0,0,w,h);
+      const viewH = Math.min(h, window.innerHeight*1.4);
+
+      for(const n of nodes){
+        n.x += n.vx; n.y += n.vy;
+        if(n.x < 0 || n.x > w) n.vx *= -1;
+        if(n.y < 0 || n.y > viewH) n.vy *= -1;
+      }
+
+      for(let i=0;i<nodes.length;i++){
+        for(let j=i+1;j<nodes.length;j++){
+          const a = nodes[i], b = nodes[j];
+          const dx = a.x-b.x, dy = a.y-b.y;
+          const dist = Math.sqrt(dx*dx+dy*dy);
+          if(dist < MAX_DIST){
+            const op = (1 - dist/MAX_DIST) * 0.18 * ((a.z+b.z)/2);
+            ctx.strokeStyle = `rgba(${ACCENT},${op})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(a.x,a.y);
+            ctx.lineTo(b.x,b.y);
+            ctx.stroke();
+          }
+        }
+      }
+      for(const n of nodes){
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 1.4 * n.z + 0.6, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(${ACCENT},${0.5*n.z})`;
+        ctx.fill();
+      }
+    }
+
+    let raf;
+    function loop(){ step(); raf = requestAnimationFrame(loop); }
+
+    resize(); makeNodes();
+    if(!prefersReduced){
+      loop();
+    } else {
+      step();
+    }
+
+    window.addEventListener('resize', () => { resize(); makeNodes(); if(prefersReduced) step(); });
+  })();
+
+  // ---------- 3D tilt on hover ----------
+  if(!prefersReduced && !window.matchMedia('(pointer: coarse)').matches){
+    document.querySelectorAll('.tilt').forEach(el => {
+      const isTerminal = el.classList.contains('terminal');
+      const max = isTerminal ? 6 : 8;
+      el.addEventListener('mousemove', (e) => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width;
+        const py = (e.clientY - r.top) / r.height;
+        const rotY = (px - 0.5) * max * 2;
+        const rotX = -(py - 0.5) * max * 2;
+        el.style.transform = `perspective(1400px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-4px) translateZ(10px)`;
+      });
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = isTerminal
+          ? 'perspective(1400px) rotateX(4deg) rotateY(-4deg)'
+          : 'perspective(1400px) rotateX(0deg) rotateY(0deg) translateY(0) translateZ(0)';
+      });
+    });
+  }
+
+  // Scroll reveal for cards
+  const revealTargets = document.querySelectorAll('.card, .commit, .cert-row, .add-row');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.style.opacity = 1;
+        e.target.style.transform = 'none';
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.1});
+
+  revealTargets.forEach(t => {
+    if(!prefersReduced){
+      t.style.opacity = 0;
+      t.style.transform = 'translateY(14px)';
+      t.style.transition = 'opacity .5s ease, transform .5s ease';
+    }
+    io.observe(t);
+  });
+</script>
+
+</body>
+</html>
